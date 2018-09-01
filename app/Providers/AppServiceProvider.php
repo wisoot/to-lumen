@@ -13,6 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(
+            \App\Gateways\ItemManagerGateway::class,
+            \App\Services\Gateways\MySql\ItemManagerGateway::class
+        );
     }
 }
