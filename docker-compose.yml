@@ -1,0 +1,46 @@
+version: '3.6'
+
+services:
+  web:
+    image: openresty/openresty:alpine
+    networks:
+      - web_tier
+    ports:
+      - 8081:80
+    volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./public:/var/www/public
+    depends_on:
+      - app
+
+  app:
+    image: wisoot/local-php:7.1-alpine
+    volumes:
+      - ./:/var/www
+    networks:
+      - web_tier
+      - db_tier
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: todo
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      - db_tier
+    ports:
+      - 33081:3306
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+
+networks:
+  web_tier:
+    driver: bridge
+  db_tier:
+    driver: bridge
+
+volumes:
+  db_data:

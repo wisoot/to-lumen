@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+artisan() {
+    docker-compose exec --workdir="/var/www/" app php artisan "$@"
+}
+
+phpcs() {
+    docker-compose exec --workdir="/var/www/" app ./vendor/bin/phpcs "$@"
+}
+
+phpstan() {
+    docker-compose exec --workdir="/var/www/" app ./vendor/bin/phpstan analyse "$@"
+}
+
+composer() {
+    docker-compose exec --workdir="/var/www/" app composer "$@"
+}
+
+ssh() {
+    if [ $# == 0 ]; then
+        docker-compose exec app /bin/bash
+    else
+        docker-compose exec $1 /bin/bash
+    fi
+}
+
+apprun() {
+    docker-compose exec --workdir="/var/www/" app "$@"
+}
+
+action=$1
+shift;
+echo "starting $action"
+
+type $action &>/dev/null && $action $@ || echo "$action not a valid function"
