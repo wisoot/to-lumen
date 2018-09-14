@@ -21,7 +21,7 @@ class ItemController extends Controller
     {
         $item = $itemManager->addItem($request->get('description'));
 
-        return $this->responseSuccess(new ItemTransformer($item));
+        return $this->responseSuccess(new ItemTransformer($item), [], HttpCode::CREATED);
     }
 
     /**
